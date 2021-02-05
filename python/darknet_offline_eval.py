@@ -1,33 +1,33 @@
+import sys
+import os
 from ctypes import *
 import math
 import random
-import glob
-import pandas as pd
-import os
-import cv2
-import time
-import csv
+
 
 def sample(probs):
     s = sum(probs)
-    probs = [a/s for a in probs]
+    probs = [a / s for a in probs]
     r = random.uniform(0, 1)
     for i in range(len(probs)):
         r = r - probs[i]
         if r <= 0:
             return i
-    return len(probs)-1
+    return len(probs) - 1
+
 
 def c_array(ctype, values):
-    arr = (ctype*len(values))()
+    arr = (ctype * len(values))()
     arr[:] = values
     return arr
+
 
 class BOX(Structure):
     _fields_ = [("x", c_float),
                 ("y", c_float),
                 ("w", c_float),
                 ("h", c_float)]
+
 
 class DETECTION(Structure):
     _fields_ = [("bbox", BOX),
@@ -44,14 +44,34 @@ class IMAGE(Structure):
                 ("c", c_int),
                 ("data", POINTER(c_float))]
 
+
 class METADATA(Structure):
     _fields_ = [("classes", c_int),
                 ("names", POINTER(c_char_p))]
 
-    
+# ylt
+
+
+class Config:
+    def __init__(self):
+        darknet_root = os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__)))
+        self.darknet_root = darknet_root
+        self.darknet_lib_so = os.path.join(darknet_root, "libdarknet.so")
+        self.model_structure = os.path.join(
+            darknet_root, "cfg/tiny.cfg").encode('utf-8')  # byte string
+        self.model_weight = os.path.join(
+            darknet_root, "yolov3-tiny.weights").encode('utf-8')  # byte string
+        self.label = os.path.join(
+            darknet_root, "cfg/coco.data").encode('utf-8')  # byte string
+        self.img_path = os.path.join(
+            darknet_root, "data/dog.jpg").encode('utf-8')  # byte string
+
+
+C = Config()
 
 #lib = CDLL("/home/pjreddie/documents/darknet/libdarknet.so", RTLD_GLOBAL)
-lib = CDLL("/home/alen/darknet/libdarknet.so", RTLD_GLOBAL)
+lib = CDLL(C.darknet_lib_so, RTLD_GLOBAL)
 lib.network_width.argtypes = [c_void_p]
 lib.network_width.restype = c_int
 lib.network_height.argtypes = [c_void_p]
@@ -69,7 +89,8 @@ make_image.argtypes = [c_int, c_int, c_int]
 make_image.restype = IMAGE
 
 get_network_boxes = lib.get_network_boxes
-get_network_boxes.argtypes = [c_void_p, c_int, c_int, c_float, c_float, POINTER(c_int), c_int, POINTER(c_int)]
+get_network_boxes.argtypes = [c_void_p, c_int, c_int,
+                              c_float, c_float, POINTER(c_int), c_int, POINTER(c_int)]
 get_network_boxes.restype = POINTER(DETECTION)
 
 make_network_boxes = lib.make_network_boxes
@@ -120,6 +141,7 @@ predict_image = lib.network_predict_image
 predict_image.argtypes = [c_void_p, IMAGE]
 predict_image.restype = POINTER(c_float)
 
+
 def classify(net, meta, im):
     out = predict_image(net, im)
     res = []
@@ -128,71 +150,39 @@ def classify(net, meta, im):
     res = sorted(res, key=lambda x: -x[1])
     return res
 
+
 def detect(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
     im = load_image(image, 0, 0)
     num = c_int(0)
     pnum = pointer(num)
     predict_image(net, im)
-    dets = get_network_boxes(net, im.w, im.h, thresh, hier_thresh, None, 0, pnum)
+    dets = get_network_boxes(net, im.w, im.h, thresh,
+                             hier_thresh, None, 0, pnum)
     num = pnum[0]
-    if (nms): do_nms_obj(dets, num, meta.classes, nms);
+    if (nms):
+        do_nms_obj(dets, num, meta.classes, nms)
 
     res = []
     for j in range(num):
         for i in range(meta.classes):
             if dets[j].prob[i] > 0:
                 b = dets[j].bbox
-                res.append((meta.names[i], dets[j].prob[i], (b.x, b.y, b.w, b.h)))
+                res.append(
+                    (meta.names[i], dets[j].prob[i], (b.x, b.y, b.w, b.h)))
     res = sorted(res, key=lambda x: -x[1])
     free_image(im)
     free_detections(dets, num)
     return res
-    
+
+
 if __name__ == "__main__":
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-    net = load_net("/home/alen/darknet/cfg/yolov3-voc.cfg".encode('utf-8'), "/home/alen/darknet/backup/yolov3-voc_final.weights".encode('utf-8'), 0)
-    meta = load_meta("/home/alen/darknet/cfg/voc.data".encode('utf-8'))    
+    #net = load_net("cfg/densenet201.cfg", "/home/pjreddie/trained/densenet201.weights", 0)
+    #im = load_image("data/wolf.jpg", 0, 0)
+    #meta = load_meta("cfg/imagenet1k.data")
+    #r = classify(net, meta, im)
+    # print r[:10]
+    net = load_net(C.model_structure, C.model_weight, 0)
+    meta = load_meta(C.label)
+    r = detect(net, meta, C.img_path)
 
-    # 测试数据集的路径
-    test_dir='/home/alen/darknet/scripts/2019_test/'
-    # 检测结果保存路径 1h220片段
-    save_dir = '/home/alen/darknet/result/'
-
-    if not os.path.exists(save_dir):
-        os.mkdir(save_dir)
-        
-    pics = os.listdir(test_dir)
-    count = 0
-    res_result=[]
-    for im in pics[:10]:
-        img = os.path.join(test_dir, im)
-        s = time.time()
-        r = detect(net, meta, img.encode('utf-8'))
-        # 输出的检测结果中坐标信息为目标的中心点坐标和box的w和w
-                # print("一张图检测耗时：%.3f秒" % (time.time() - s))
-        im = cv2.imread(img)
-        for res in r:
-            #print(type(res),dir(res))
-            print(res,res[0].decode('utf-8'))
-            x1 = int(res[2][0] - (res[2][2] / 2))
-            y1 = int(res[2][1] - (res[2][3] / 2))
-            x2 = x1 + int(res[2][2])
-            y2 = y1 + int(res[2][3])
-            cv2.rectangle(im, (x1-5, y1-5), (x2+5, y2+5), (0, 255, 0), 2)
-            cv2.putText(im, str(res[0]).split("'")[1], (x1-10, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-            cv2.imwrite(save_dir +str(count) +'.png', im)
-            res_result+=[res[0].decode('utf-8')]
-        count += 1
-#columns={'test_unmber','data_name'}
-#df_test=pd.DataFrame({'test_unmber':res_result,'data_name':res_result})
-#df_test.to_csv('Alen.csv')
-#print(res_result)
-#print(df_test)
-
-
-# Done
-# df = pd.DataFrame(save_for_confusion_matrix)
-# df.to_csv('your_filename.csv')
-    
-    
-
+    print(r)
