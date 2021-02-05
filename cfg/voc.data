@@ -1,6 +1,0 @@
-classes= 3
-train  = /home/alen/darknet/scripts/2019_train.txt
-valid  = /home/alen/darknet/scripts/2019_val.txt
-names = /home/alen/darknet/data/voc.names
-backup = backup
-
