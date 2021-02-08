@@ -56,7 +56,7 @@ About Darknet framework: https://pjreddie.com/darknet/yolo/
 
 1. Download and unzip test-dev2017 dataset from MS COCO server: http://images.cocodataset.org/zips/test2017.zip
 2. Download list of images for Detection taks and replace the paths with yours: https://raw.githubusercontent.com/AlexeyAB/darknet/master/scripts/testdev2017.txt
-3. Download `yolov4.weights` file 245 MB: [yolov4.weights](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights) (Google-drive mirror [yolov4.weights](https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT) )
+3. Download `yolov3.weights` file 245 MB: [yolov4.weights](https://drive.google.com/drive/folders/1026kpMYB5RChSiy4vo5O1RdX1gwzZmrg) (Google-drive mirror [yolov4.weights](https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT) )
 4. Content of the file `cfg/coco.data` should be
 
 ```ini
@@ -432,7 +432,7 @@ This project was developed on Ubuntu 18.04, cuda 10.1, RTX 2080-Ti and OpenCV >=
 1. Calculate recall
 
      use: ./darknet detector recall cfg/voc.data cfg/yolov3-voc.cfg backup/yolov3-voc_final.weights
-          <img src='./tesr_repo/recall.jpg'></img>
+
      
 ## Drawing PR curve
 1. drawing PR curve
@@ -442,6 +442,7 @@ This project was developed on Ubuntu 18.04, cuda 10.1, RTX 2080-Ti and OpenCV >=
 <img src='./asserts/R_PR.jpg'></img>
 <img src='./asserts/B_PR.jpg'></img>
 <img src='./asserts/C_PR.jpg'></img>
+
 ## Calculate ap,map
 1.Calculate ap,map
      use: python reval_voc.py --voc_dir /home/dj/dingjing/darknet/scripts/VOCdevkit --year 2007 --image_set test --classes /home/dj/dingjing/darknet/data/dingall.names x
