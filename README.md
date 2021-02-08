@@ -408,7 +408,7 @@ then set the same 9 `anchors` in each of 3 `[yolo]`-layers in your cfg-file. But
 
 * it is not necessary to train the network again, just use `.weights`-file already trained for 416x416 resolution
 
-* to get even greater accuracy you should train with higher resolution 608x608 or 832x832, note: if error `Out of memory` occurs then in `.cfg`-file you should increase `subdivisions=16`, 32 or 64: [link](https://github.com/AlexeyAB/darknet/blob/0039fd26786ab5f71d5af725fc18b3f521e7acfd/cfg/yolov3.cfg#L4)
+* to get even greater accuracy you should train with higher resolution 608x608 or 832x832, note: if error `Out of memory` occurs then in `.cfg`-file you should increase `subdivisions=16`, 32 or 64: [link]
 
 # Test
 
