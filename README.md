@@ -443,8 +443,9 @@ This project was developed on Ubuntu 18.04, cuda 10.1, RTX 2080-Ti and OpenCV >=
 
 ## Calculate ap,map
 1.Calculate ap,map
-     use: python reval_voc.py --voc_dir /home/dj/dingjing/darknet/scripts/VOCdevkit --year 2007 --image_set test --classes /home/dj/dingjing/darknet/data/dingall.names x 
+     use: python reval_voc.py --voc_dir /home/dj/dingjing/darknet/scripts/VOCdevkit --year 2007 --image_set test --classes /home/dj/dingjing/darknet/data/dingall.names x
+     <img src='./asserts/ap_map.jpg'></img>
      Note 1: x is the name of the new folder created by yourself, used to save the last generated .txt file
      Note 2: Generate plk file for drawing PR curve 
-     <img src='./asserts/ap_map.jpg'></img>
+
 
