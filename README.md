@@ -440,7 +440,8 @@ This project was developed on Ubuntu 18.04, cuda 10.1, RTX 2080-Ti and OpenCV >=
      Run the program in /scripts：python pr.py
      
 <img src='./asserts/R_PR.jpg'></img>
-
+<img src='./asserts/B_PR.jpg'></img>
+<img src='./asserts/C_PR.jpg'></img>
 ## Calculate ap,map
 1.Calculate ap,map
      use: python reval_voc.py --voc_dir /home/dj/dingjing/darknet/scripts/VOCdevkit --year 2007 --image_set test --classes /home/dj/dingjing/darknet/data/dingall.names x
