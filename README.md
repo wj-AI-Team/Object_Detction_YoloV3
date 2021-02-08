@@ -433,14 +433,6 @@ This project was developed on Ubuntu 18.04, cuda 10.1, RTX 2080-Ti and OpenCV >=
 
      use: ./darknet detector recall cfg/voc.data cfg/yolov3-voc.cfg backup/yolov3-voc_final.weights
           <img src='./tesr_repo/recall.jpg'></img>
-## Calculate ap,map
-1.Calculate ap,map
-
-     use: python reval_voc.py --voc_dir /home/dj/dingjing/darknet/scripts/VOCdevkit --year 2007 --image_set test --classes /home/dj/dingjing/darknet/data/dingall.names x 
-     Note 1: x is the name of the new folder created by yourself, used to save the last generated .txt file
-     Note 2: Generate plk file for drawing PR curve 
-     
-     <img src='./asserts/ap_map.jpg'></img>
      
 ## Drawing PR curve
 1. drawing PR curve
@@ -448,4 +440,11 @@ This project was developed on Ubuntu 18.04, cuda 10.1, RTX 2080-Ti and OpenCV >=
      Run the program in /scripts：python pr.py
      
 <img src='./asserts/R_PR.jpg'></img>
+
+## Calculate ap,map
+1.Calculate ap,map
+     use: python reval_voc.py --voc_dir /home/dj/dingjing/darknet/scripts/VOCdevkit --year 2007 --image_set test --classes /home/dj/dingjing/darknet/data/dingall.names x 
+     Note 1: x is the name of the new folder created by yourself, used to save the last generated .txt file
+     Note 2: Generate plk file for drawing PR curve 
+     <img src='./asserts/ap_map.jpg'></img>
 
