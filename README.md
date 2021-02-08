@@ -449,5 +449,5 @@ This project was developed on Ubuntu 18.04, cuda 10.1, RTX 2080-Ti and OpenCV >=
 
      Run the program in /scripts：python pr.py
      
-<img src='./tesr_repo/adapter_PR%20cruve.jpg'></img>
+<img src='./asserts/R_PR.jpg'></img>
 
