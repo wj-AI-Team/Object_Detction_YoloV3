@@ -41,16 +41,14 @@ About Darknet framework: https://pjreddie.com/darknet/yolo/
 * [Yolo v4 in other frameworks (TensorRT, TensorFlow, PyTorch, OpenVINO, OpenCV-dnn, TVM,...)](#yolo-v4-in-other-frameworks)
 * [Datasets](#datasets)
 
-0. [Improvements in this repository](#improvements-in-this-repository)
-1. [How to use](#how-to-use-on-the-command-line)
-2. How to compile on Linux
+1. How to compile on Linux
    * [Using cmake](#how-to-compile-on-linux-using-cmake)
    * [Using make](#how-to-compile-on-linux-using-make)
-3. [Training and Evaluation of speed and accuracy on MS COCO](https://github.com/AlexeyAB/darknet/wiki#training-and-evaluation-of-speed-and-accuracy-on-ms-coco)
-4. [How to train with multi-GPU:](#how-to-train-with-multi-gpu)
-5. [How to train (to detect your custom objects)](#how-to-train-to-detect-your-custom-objects)
-6. [How to train tiny-yolo (to detect your custom objects)](#how-to-train-tiny-yolo-to-detect-your-custom-objects)
-7. [How to improve object detection](#how-to-improve-object-detection)
+2. [Training and Evaluation of speed and accuracy on MS COCO](https://github.com/AlexeyAB/darknet/wiki#training-and-evaluation-of-speed-and-accuracy-on-ms-coco)
+3. [How to train with multi-GPU:](#how-to-train-with-multi-gpu)
+4. [How to train (to detect your custom objects)](#how-to-train-to-detect-your-custom-objects)
+5. [How to train tiny-yolo (to detect your custom objects)](#how-to-train-tiny-yolo-to-detect-your-custom-objects)
+6. [How to improve object detection](#how-to-improve-object-detection)
 
 #### How to evaluate AP of YOLOv3 on the MS COCO evaluation server
 
@@ -76,7 +74,7 @@ eval=coco
 #### How to evaluate FPS of YOLOv3 on GPU
 
 1. Compile Darknet with `GPU=1 CUDNN=1 CUDNN_HALF=1 OPENCV=1` in the `Makefile`
-2. Download `yolov3.weights` file 245 MB: [yolov3.weights](https://drive.google.com/drive/folders/1026kpMYB5RChSiy4vo5O1RdX1gwzZmrg) (Google-drive mirror [yolov4.weights](https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT) )
+2. Download `darknet53.conv.74` file 245 MB: [darknet53.conv.74](https://drive.google.com/drive/folders/1026kpMYB5RChSiy4vo5O1RdX1gwzZmrg) 
 3. Get any .avi/.mp4 video file (preferably not more than 1920x1080 to avoid bottlenecks in CPU performance)
 4. Run one of two commands and look at the AVG FPS:
 
@@ -91,8 +89,8 @@ There are weights-file for different cfg-files (trained for MS COCO dataset):
 
 FPS on RTX 2070 (R) and Tesla V100 (V):
 
-* [yolov4.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4.cfg) - 245 MB: [yolov4.weights](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov3.weights) 
-    just change `width=` and `height=` parameters in `yolov3.cfg` file and use the same `yolov3.weights` file for all cases:
+* [yolov4.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4.cfg) - 245 MB: [yolov3.weights](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov3.weights) 
+    just change `width=` and `height=` parameters in `yolov3.cfg` file and use the same `yolov3.weights`(darknet53.conv.74) file for all cases:
   * `width=608 height=608` in cfg: **65.7% mAP@0.5 (43.5% AP@0.5:0.95) - 34(R) FPS / 62(V) FPS** - 128.5 BFlops
   * `width=512 height=512` in cfg: **64.9% mAP@0.5 (43.0% AP@0.5:0.95) - 45(R) FPS / 83(V) FPS** - 91.1 BFlops
   * `width=416 height=416` in cfg: **62.8% mAP@0.5 (41.2% AP@0.5:0.95) - 55(R) FPS / 96(V) FPS** - 60.1 BFlops
@@ -113,90 +111,7 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
 
 #### Datasets
 
-* MS COCO: use `./scripts/get_coco_dataset.sh` to get labeled MS COCO detection dataset
-* OpenImages: use `python ./scripts/get_openimages_dataset.py` for labeling train detection dataset
-* Pascal VOC: use `python ./scripts/voc_label.py` for labeling Train/Test/Val detection datasets
-* ILSVRC2012 (ImageNet classification): use `./scripts/get_imagenet_train.sh` (also `imagenet_label.sh` for labeling valid set)
-* German/Belgium/Russian/LISA/MASTIF Traffic Sign Datasets for Detection - use this parsers: https://github.com/angeligareta/Datasets2Darknet#detection-task
-* List of other datasets: https://github.com/AlexeyAB/darknet/tree/master/scripts#datasets
-
-### Improvements in this repository
-
-* developed State-of-the-Art object detector YOLOv4
-* added State-of-Art models: CSP, PRN, EfficientNet
-* added layers: [conv_lstm], [scale_channels] SE/ASFF/BiFPN, [local_avgpool], [sam], [Gaussian_yolo], [reorg3d] (fixed [reorg]), fixed [batchnorm]
-* added the ability for training recurrent models (with layers conv-lstm`[conv_lstm]`/conv-rnn`[crnn]`) for accurate detection on video
-* added data augmentation: `[net] mixup=1 cutmix=1 mosaic=1 blur=1`. Added activations: SWISH, MISH, NORM_CHAN, NORM_CHAN_SOFTMAX
-* added the ability for training with GPU-processing using CPU-RAM to increase the mini_batch_size and increase accuracy (instead of batch-norm sync)
-* improved binary neural network performance **2x-4x times** for Detection on CPU and GPU if you trained your own weights by using this XNOR-net model (bit-1 inference) : https://github.com/AlexeyAB/darknet/blob/master/cfg/yolov3-tiny_xnor.cfg
-* improved neural network performance **~7%** by fusing 2 layers into 1: Convolutional + Batch-norm
-* improved performance: Detection **2x times**, on GPU Volta/Turing (Tesla V100, GeForce RTX, ...) using Tensor Cores if `CUDNN_HALF` defined in the `Makefile` or `darknet.sln`
-* improved performance **~1.2x** times on FullHD, **~2x** times on 4K, for detection on the video (file/stream) using `darknet detector demo`... 
-* improved performance **3.5 X times** of data augmentation for training (using OpenCV SSE/AVX functions instead of hand-written functions) - removes bottleneck for training on multi-GPU or GPU Volta
-* improved performance of detection and training on Intel CPU with AVX (Yolo v3 **~85%**)
-* optimized memory allocation during network resizing when `random=1`
-* optimized GPU initialization for detection - we use batch=1 initially instead of re-init with batch=1
-* added correct calculation of **mAP, F1, IoU, Precision-Recall** using command `darknet detector map`...
-* added drawing of chart of average-Loss and accuracy-mAP (`-map` flag) during training
-* run `./darknet detector demo ... -json_port 8070 -mjpeg_port 8090` as JSON and MJPEG server to get results online over the network by using your soft or Web-browser
-* added calculation of anchors for training
-* added example of Detection and Tracking objects: https://github.com/AlexeyAB/darknet/blob/master/src/yolo_console_dll.cpp
-* run-time tips and warnings if you use incorrect cfg-file or dataset
-* added support for Windows
-* many other fixes of code...
-
-And added manual - [How to train Yolo v4-v2 (to detect your custom objects)](#how-to-train-to-detect-your-custom-objects)
-
-Also, you might be interested in using a simplified repository where is implemented INT8-quantization (+30% speedup and -1% mAP reduced): https://github.com/AlexeyAB/yolo2_light
-
-#### How to use on the command line
-
-On Linux use `./darknet` instead of `darknet.exe`, like this:`./darknet detector test ./cfg/coco.data ./cfg/yolov4.cfg ./yolov4.weights`
-
-On Linux find executable file `./darknet` in the root directory, while on Windows find it in the directory `\build\darknet\x64` 
-
-* Yolo v4 COCO - **image**: `darknet.exe detector test cfg/coco.data cfg/yolov4.cfg yolov4.weights -thresh 0.25`
-* **Output coordinates** of objects: `darknet.exe detector test cfg/coco.data yolov4.cfg yolov4.weights -ext_output dog.jpg`
-* Yolo v4 COCO - **video**: `darknet.exe detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights -ext_output test.mp4`
-* Yolo v4 COCO - **WebCam 0**: `darknet.exe detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights -c 0`
-* Yolo v4 COCO for **net-videocam** - Smart WebCam: `darknet.exe detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights http://192.168.0.80:8080/video?dummy=param.mjpg`
-* Yolo v4 - **save result videofile res.avi**: `darknet.exe detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights test.mp4 -out_filename res.avi`
-* Train on **Amazon EC2**, to see mAP & Loss-chart using URL like: `http://ec2-35-160-228-91.us-west-2.compute.amazonaws.com:8090` in the Chrome/Firefox (**Darknet should be compiled with OpenCV**): 
-    `./darknet detector train cfg/coco.data yolov4.cfg yolov4.conv.137 -dont_show -mjpeg_port 8090 -map`
-* 186 MB Yolo9000 - image: `darknet.exe detector test cfg/combine9k.data cfg/yolo9000.cfg yolo9000.weights`
-* Remeber to put data/9k.tree and data/coco9k.map under the same folder of your app if you use the cpp api to build an app
-* To process a list of images `data/train.txt` and save results of detection to `result.json` file use: 
-    `darknet.exe detector test cfg/coco.data cfg/yolov4.cfg yolov4.weights -ext_output -dont_show -out result.json < data/train.txt`
-* To process a list of images `data/train.txt` and save results of detection to `result.txt` use:                             
-    `darknet.exe detector test cfg/coco.data cfg/yolov4.cfg yolov4.weights -dont_show -ext_output < data/train.txt > result.txt`
-* Pseudo-lableing - to process a list of images `data/new_train.txt` and save results of detection in Yolo training format for each image as label `<image_name>.txt` (in this way you can increase the amount of training data) use:
-    `darknet.exe detector test cfg/coco.data cfg/yolov4.cfg yolov4.weights -thresh 0.25 -dont_show -save_labels < data/new_train.txt`
-* To calculate anchors: `darknet.exe detector calc_anchors data/obj.data -num_of_clusters 9 -width 416 -height 416`
-* To check accuracy mAP@IoU=50: `darknet.exe detector map data/obj.data yolo-obj.cfg backup\yolo-obj_7000.weights`
-* To check accuracy mAP@IoU=75: `darknet.exe detector map data/obj.data yolo-obj.cfg backup\yolo-obj_7000.weights -iou_thresh 0.75`
-
-##### For using network video-camera mjpeg-stream with any Android smartphone
-
-1. Download for Android phone mjpeg-stream soft: IP Webcam / Smart WebCam
-
-    * Smart WebCam - preferably: https://play.google.com/store/apps/details?id=com.acontech.android.SmartWebCam2
-    * IP Webcam: https://play.google.com/store/apps/details?id=com.pas.webcam
-
-2. Connect your Android phone to computer by WiFi (through a WiFi-router) or USB
-3. Start Smart WebCam on your phone
-4. Replace the address below, on shown in the phone application (Smart WebCam) and launch:
-
-* Yolo v4 COCO-model: `darknet.exe detector demo data/coco.data yolov4.cfg yolov4.weights http://192.168.0.80:8080/video?dummy=param.mjpg -i 0`
-
-### How to compile on Linux/macOS (using `CMake`)
-
-The `CMakeLists.txt` will attempt to find installed optional dependencies like CUDA, cudnn, ZED and build against those. It will also create a shared object library file to use `darknet` for code development.
-
-Open a shell terminal inside the cloned repository and launch:
-
-```bash
-./build.sh
-```
+* MS COCO: use this parsers:https://drive.google.com/drive/folders/14jaFTkxxoti1glsXJpTNi5ftGvEwyh5p
 
 ### How to compile on Linux (using `make`)
 
