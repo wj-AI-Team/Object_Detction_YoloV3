@@ -52,11 +52,12 @@ About Darknet framework: https://pjreddie.com/darknet/yolo/
 6. [How to train tiny-yolo (to detect your custom objects)](#how-to-train-tiny-yolo-to-detect-your-custom-objects)
 7. [How to improve object detection](#how-to-improve-object-detection)
 
-#### How to evaluate AP of YOLOv4 on the MS COCO evaluation server
+#### How to evaluate AP of YOLOv3 on the MS COCO evaluation server
 
 1. Download and unzip test-dev2017 dataset from MS COCO server: http://images.cocodataset.org/zips/test2017.zip
 2. Download list of images for Detection taks and replace the paths with yours: https://raw.githubusercontent.com/AlexeyAB/darknet/master/scripts/testdev2017.txt
-3. Download `yolov3.weights` file 245 MB: [yolov4.weights](https://drive.google.com/drive/folders/1026kpMYB5RChSiy4vo5O1RdX1gwzZmrg) (Google-drive mirror [yolov4.weights](https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT) )
+3. Download `yolov3.weights` file 245 MB: [yolov3.weights](https://drive.google.com/drive/folders/1026kpMYB5RChSiy4vo5O1RdX1gwzZmrg)
+(https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT) )
 4. Content of the file `cfg/coco.data` should be
 
 ```ini
@@ -72,17 +73,17 @@ eval=coco
 7. Rename the file  `/results/coco_results.json` to `detections_test-dev2017_yolov4_results.json` and compress it to `detections_test-dev2017_yolov4_results.zip`
 8. Submit file `detections_test-dev2017_yolov4_results.zip` to the MS COCO evaluation server for the `test-dev2019 (bbox)`
 
-#### How to evaluate FPS of YOLOv4 on GPU
+#### How to evaluate FPS of YOLOv3 on GPU
 
 1. Compile Darknet with `GPU=1 CUDNN=1 CUDNN_HALF=1 OPENCV=1` in the `Makefile`
-2. Download `yolov4.weights` file 245 MB: [yolov4.weights](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights) (Google-drive mirror [yolov4.weights](https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT) )
+2. Download `yolov3.weights` file 245 MB: [yolov3.weights](https://drive.google.com/drive/folders/1026kpMYB5RChSiy4vo5O1RdX1gwzZmrg) (Google-drive mirror [yolov4.weights](https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT) )
 3. Get any .avi/.mp4 video file (preferably not more than 1920x1080 to avoid bottlenecks in CPU performance)
 4. Run one of two commands and look at the AVG FPS:
 
 * include video_capturing + NMS + drawing_bboxes: 
-    `./darknet detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights test.mp4 -dont_show -ext_output`
+    `./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights test.mp4 -dont_show -ext_output`
 * exclude video_capturing + NMS + drawing_bboxes: 
-    `./darknet detector demo cfg/coco.data cfg/yolov4.cfg yolov4.weights test.mp4 -benchmark`
+    `./darknet detector demo cfg/coco.data cfg/yolov3.cfg yolov3.weights test.mp4 -benchmark`
 
 #### Pre-trained models
 
@@ -90,14 +91,14 @@ There are weights-file for different cfg-files (trained for MS COCO dataset):
 
 FPS on RTX 2070 (R) and Tesla V100 (V):
 
-* [yolov4.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4.cfg) - 245 MB: [yolov4.weights](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights) (Google-drive mirror [yolov4.weights](https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT) ) paper [Yolo v4](https://arxiv.org/abs/2004.10934)
-    just change `width=` and `height=` parameters in `yolov4.cfg` file and use the same `yolov4.weights` file for all cases:
+* [yolov4.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4.cfg) - 245 MB: [yolov4.weights](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov3.weights) 
+    just change `width=` and `height=` parameters in `yolov3.cfg` file and use the same `yolov3.weights` file for all cases:
   * `width=608 height=608` in cfg: **65.7% mAP@0.5 (43.5% AP@0.5:0.95) - 34(R) FPS / 62(V) FPS** - 128.5 BFlops
   * `width=512 height=512` in cfg: **64.9% mAP@0.5 (43.0% AP@0.5:0.95) - 45(R) FPS / 83(V) FPS** - 91.1 BFlops
   * `width=416 height=416` in cfg: **62.8% mAP@0.5 (41.2% AP@0.5:0.95) - 55(R) FPS / 96(V) FPS** - 60.1 BFlops
   * `width=320 height=320` in cfg:   **60% mAP@0.5 (  38% AP@0.5:0.95) - 63(R) FPS / 123(V) FPS** - 35.5 BFlops
 
-* [yolov4-tiny.cfg](https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/yolov4-tiny.cfg) - **40.2% mAP@0.5 - 371(1080Ti) FPS / 330(RTX2070) FPS** - 6.9 BFlops - 23.1 MB: [yolov4-tiny.weights](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights)
+
 
 
 ### Requirements
