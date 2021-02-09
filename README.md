@@ -38,7 +38,6 @@ About Darknet framework: https://pjreddie.com/darknet/yolo/
 
 * [Requirements (and how to install dependecies)](#requirements)
 * [Pre-trained models](#pre-trained-models)
-* [Yolo v4 in other frameworks (TensorRT, TensorFlow, PyTorch, OpenVINO, OpenCV-dnn, TVM,...)](#yolo-v4-in-other-frameworks)
 * [Datasets](#datasets)
 
 1. How to compile on Linux
@@ -67,9 +66,9 @@ backup = backup
 eval=coco
 ```
 5. Create `/results/` folder near with `./darknet` executable file
-6. Run validation: `./darknet detector valid cfg/coco.data cfg/yolov4.cfg yolov4.weights`
-7. Rename the file  `/results/coco_results.json` to `detections_test-dev2017_yolov4_results.json` and compress it to `detections_test-dev2017_yolov4_results.zip`
-8. Submit file `detections_test-dev2017_yolov4_results.zip` to the MS COCO evaluation server for the `test-dev2019 (bbox)`
+6. Run validation: `./darknet detector valid cfg/coco.data cfg/yolov3.cfg yolov3.weights`
+7. Rename the file  `/results/coco_results.json` to `detections_test-dev2017_yolov3_results.json` and compress it to `detections_test-dev2017_yolov4_results.zip`
+8. Submit file `detections_test-dev2017_yolov3_results.zip` to the MS COCO evaluation server for the `test-dev2019 (bbox)`
 
 #### How to evaluate FPS of YOLOv3 on GPU
 
