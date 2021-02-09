@@ -96,8 +96,6 @@ FPS on RTX 2070 (R) and Tesla V100 (V):
   * `width=320 height=320` in cfg:   **60% mAP@0.5 (  38% AP@0.5:0.95) - 63(R) FPS / 123(V) FPS** - 35.5 BFlops
 
 
-
-
 ### Requirements
 
 * Windows or Linux
@@ -331,6 +329,14 @@ This project was developed on Ubuntu 18.04, cuda 10.1, RTX 2080-Ti and OpenCV >=
 1. Test a single picture
 
      use: ./darknet detector test cfg/voc.data cfg/yolov4-voc.cfg backup/yolov4-voc_final.weights data/xxx.jpg
+    
+    <img src='./asserts/result1.jpg'></img>
+    <img src='./asserts/result2.jpg'></img>
+    <img src='./asserts/result3.jpg'></img>
+    <img src='./asserts/result4.jpg'></img>
+    <img src='./asserts/result5.jpg'></img>
+    <img src='./asserts/result6.jpg'></img>
+     
 2. Test video
 
     use: ./darknet detector demo cfg/voc.data cfg/yolov3-voc.cfg backup/yolov3-voc_25000.weights data/XXXX.mp4
